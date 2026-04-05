@@ -20,7 +20,7 @@
   },
   "scripts": {
     "serve": "live-server --port=9000 --entry-file=index.html dev/",
-    "cp_to_public": "cp dev/* public",
+    "cp_to_public": "mkdir public; cp dev/* public",
     "build": "API_HOST=\"wss://tobuy2.fly.dev:443/\" node scripts/build.mjs; yarn cp_to_public"
   }
 }
