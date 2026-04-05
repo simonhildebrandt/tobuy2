@@ -1,0 +1,29 @@
+{
+  "name": "tobuy2",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "git@github.com:simonhildebrandt/tobuy2.git",
+  "author": "Simon Hildebrandt <simonhildebrandt@gmail.com>",
+  "license": "MIT",
+  "dependencies": {
+    "@automerge/react": "^2.5.5",
+    "@chakra-ui/react": "^3.34.0",
+    "@emotion/react": "^11.14.0",
+    "esbuild": "^0.28.0",
+    "esbuild-plugin-wasm": "^1.1.0",
+    "live-server": "1.2.1",
+    "next-themes": "^0.4.6",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "react-icons": "^5.6.0",
+    "react-router": "^7.14.0"
+  },
+  "scripts": {
+    "serve": "live-server --port=9000 --entry-file=index.html dev/",
+    "build": "yarn esbuild src/index.jsx --bundle --outfile=dev/index.js --jsx=automatic --define:SITE_URL=false",
+    "watch": "yarn esbuild src/index.jsx --bundle --outfile=dev/index.js --jsx=automatic --watch --define:SITE_URL=false",
+    "cp_to_public": "cp dev/* public",
+    "build_prod": "yarn cp_to_public && yarn esbuild src/index.jsx --bundle --outfile=public/index.js --define:SITE_URL=\\\"https://storerun.au\\\"",
+    "emulator": "CACHE=true firebase emulators:start --export-on-exit=./firebase_data --import=./firebase_data"
+  }
+}
