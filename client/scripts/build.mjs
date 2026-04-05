@@ -8,6 +8,9 @@ const settings = {
   plugins: [wasmLoader()],
   format: "esm",
   jsx: "automatic",
+  define: {
+    API_HOST: JSON.stringify(process.env.API_HOST || "ws://localhost:8080"),
+  },
 };
 
 if (process.env.WATCH == "1") {

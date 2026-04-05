@@ -1,6 +1,7 @@
 import { Repo, IndexedDBStorageAdapter } from "@automerge/react";
 import { WebSocketClientAdapter } from "@automerge/automerge-repo-network-websocket";
-const websocketConnection = new WebSocketClientAdapter("ws://localhost:8080");
+
+const websocketConnection = new WebSocketClientAdapter(API_HOST);
 
 export const repo = new Repo({
   network: [websocketConnection],
