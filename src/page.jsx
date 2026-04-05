@@ -19,7 +19,13 @@ export default ({ children }) => {
         </Link>
         <ColorModeButton />
       </Flex>
-      <Flex as="main" width="100%" maxWidth="800px" p={4} flex={1}>
+      <Flex
+        as="main"
+        width="100%"
+        maxWidth="800px"
+        flexGrow={1}
+        flexDirection="column"
+      >
         {children}
       </Flex>
     </Flex>

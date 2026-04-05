@@ -28,5 +28,10 @@ export const useLists = () => {
     setLists(getListsFromState());
   };
 
-  return [lists, deleteList];
+  const addList = (listId) => {
+    addListToState(listId);
+    setLists(getListsFromState());
+  };
+
+  return [lists, addList, deleteList];
 };
