@@ -21,7 +21,6 @@ export const saveList = (lists) => {
 
 export const useLists = () => {
   const [lists, setLists] = useState(getListsFromState());
-  console.log("useLists", lists);
 
   const deleteList = (listId) => {
     deleteListFromState(listId);

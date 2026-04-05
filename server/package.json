@@ -1,0 +1,13 @@
+{
+  "name": "tobuy2-server",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "git@github.com:simonhildebrandt/tobuy2.git",
+  "author": "Simon Hildebrandt <simonhildebrandt@gmail.com>",
+  "license": "MIT",
+  "dependencies": {
+    "@automerge/automerge-repo": "^2.5.5",
+    "@automerge/automerge-repo-network-websocket": "^2.5.5",
+    "@automerge/automerge-repo-storage-nodefs": "^2.5.5"
+  }
+}

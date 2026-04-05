@@ -5,7 +5,7 @@ import { BrowserRouter, Routes, Route } from "react-router";
 
 import { repo } from "./repo";
 import Lists from "./lists";
-import { List } from "./List";
+import { List } from "./list";
 
 export default function App() {
   return (

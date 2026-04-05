@@ -43,17 +43,11 @@ export default function Lists() {
             <HiChevronDoubleRight />
           </IconButton>
         </Flex>
-        <Flex
-          direction="column"
-          w="100%"
-          overflowY="auto"
-          flex="1 1 auto"
-          gap={4}
-        >
+        <Flex direction="column" w="100%" overflowY="auto" flex="1 1 auto">
           <Flex
             direction="column"
             h="0"
-            gap={2}
+            gap={4}
             flexShrink={1}
             flexGrow={0}
             px={4}

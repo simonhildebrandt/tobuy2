@@ -5,83 +5,17 @@ import {
   Input,
   InputGroup,
   IconButton,
-  Checkbox,
   Text,
   Button,
+  Tag,
 } from "@chakra-ui/react";
 import { useParams } from "react-router";
 import { HiChevronDoubleRight } from "react-icons/hi2";
-import { LuX, LuTrash2, LuEyeOff, LuEye } from "react-icons/lu";
+import { LuX, LuEyeOff, LuEye, LuCheck } from "react-icons/lu";
 
 import Page from "./page";
 import { useLists } from "./state";
-
-function ListItem({ item, onCheck, onDelete, checked, index }) {
-  const [deleting, setDeleting] = useState(false);
-
-  const handleChecked = (e) => {
-    onCheck(index);
-  };
-
-  function deleteItem() {
-    onDelete(index);
-  }
-
-  return (
-    <Flex
-      p={2}
-      bg={{ base: "gray.100", _dark: "gray.900" }}
-      rounded="md"
-      _hover={{ bg: { base: "gray.200", _dark: "gray.800" } }}
-    >
-      <Checkbox.Root
-        onCheckedChange={handleChecked}
-        checked={checked}
-        variant="outline"
-      >
-        <Checkbox.HiddenInput />
-        <Checkbox.Control>
-          <Checkbox.Indicator />
-        </Checkbox.Control>
-        <Checkbox.Label />
-      </Checkbox.Root>
-      <Flex flexGrow={1} align="center" gap={2}>
-        <Text fontSize="lg" opacity={checked ? 0.5 : 1}>
-          {item.name}
-        </Text>
-      </Flex>
-      {deleting ? (
-        <>
-          <IconButton
-            aria-label="Delete item"
-            variant="ghost"
-            colorPalette="red"
-            onClick={deleteItem}
-          >
-            <LuTrash2 />
-          </IconButton>
-          <IconButton
-            aria-label="cancel deleting"
-            variant="ghost"
-            colorPalette="red"
-            onClick={() => setDeleting(false)}
-          >
-            <LuX />
-          </IconButton>
-        </>
-      ) : (
-        <IconButton
-          aria-label="Delete item"
-          variant="ghost"
-          colorPalette="red"
-          onClick={() => setDeleting(true)}
-        >
-          <LuTrash2 />
-        </IconButton>
-      )}
-    </Flex>
-  );
-}
+import ListItem from "./list-item";
 
 export const List = () => {
   let { id } = useParams();
@@ -89,7 +23,7 @@ export const List = () => {
 
   const [doc, changeDoc] = useDocument(id);
   const [newItemName, setNewItemName] = useState("");
-  const [showHidden, setShowHidden] = useState(true);
+  const [showHidden, setShowHidden] = useState(false);
 
   if (!doc) return <div>Loading...</div>;
 
@@ -108,6 +42,7 @@ export const List = () => {
       const [item] = d.items.splice(index, 1);
       d.inactiveItems.push({
         name: item.name,
+        details: item.details,
         createdAt: item.createdAt,
         checkedAt: Date.now(),
       });
@@ -117,7 +52,11 @@ export const List = () => {
   function handleUncheck(index) {
     changeDoc((d) => {
       const [item] = d.inactiveItems.splice(index, 1);
-      d.items.push({ name: item.name, createdAt: item.createdAt });
+      d.items.push({
+        name: item.name,
+        details: item.details,
+        createdAt: item.createdAt,
+      });
     });
   }
 
@@ -129,7 +68,33 @@ export const List = () => {
     };
   }
 
+  function handleUpdate(listName) {
+    return (index, newDetails) => {
+      changeDoc((d) => {
+        d[listName][index].details = newDetails;
+      });
+    };
+  }
+
   const { items, inactiveItems } = doc;
+
+  let suggestions = [];
+  if (newItemName.trim()) {
+    const lowerCaseInput = newItemName.toLowerCase();
+    const lowerCaseItems = items.map((item) => item.name.toLowerCase());
+    const lowerCaseInactiveItems = inactiveItems.map((item) =>
+      item.name.toLowerCase(),
+    );
+    const allItems = [...lowerCaseInactiveItems, ...lowerCaseItems];
+    const matchingItems = allItems.filter((item) => {
+      return item.includes(lowerCaseInput);
+    });
+    suggestions = matchingItems.slice(0, 5).map((item) => ({
+      name: item,
+      active: lowerCaseItems.includes(item),
+      index: lowerCaseInactiveItems.indexOf(item),
+    }));
+  }
 
   return (
     <Page>
@@ -189,6 +154,38 @@ export const List = () => {
             {showHidden ? <LuEye /> : <LuEyeOff />}
           </IconButton>
         </Flex>
+        {suggestions.length > 0 && (
+          <Flex
+            gap={2}
+            align="center"
+            px={4}
+            w="100%"
+            overflowX="scroll"
+            scrollbar="hidden"
+          >
+            {suggestions.map((suggestion, index) =>
+              suggestion.active ? (
+                <Button
+                  key={index}
+                  size="xl"
+                  colorPalette="gray"
+                  disabled="true"
+                >
+                  {suggestion.name}
+                </Button>
+              ) : (
+                <Button
+                  key={index}
+                  size="xl"
+                  colorPalette="green"
+                  onClick={() => handleUncheck(suggestion.index)}
+                >
+                  {suggestion.name}
+                </Button>
+              ),
+            )}
+          </Flex>
+        )}
         <Flex direction="column" w="100%" overflowY="auto" flex="1 1 auto">
           <Flex
             direction="column"
@@ -206,6 +203,7 @@ export const List = () => {
                   checked={false}
                   onCheck={handleCheck}
                   onDelete={handleDelete("items")}
+                  onUpdate={handleUpdate("items")}
                 />
               </Fragment>
             ))}
@@ -218,6 +216,7 @@ export const List = () => {
                     checked={true}
                     onCheck={handleUncheck}
                     onDelete={handleDelete("inactiveItems")}
+                    onUpdate={handleUpdate("inactiveItems")}
                   />
                 </Fragment>
               ))}

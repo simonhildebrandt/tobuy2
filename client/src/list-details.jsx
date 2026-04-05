@@ -1,16 +1,14 @@
 import { useEffect, useState, useRef } from "react";
 import { useDocument } from "@automerge/react";
-import { Flex, IconButton, Text, Editable, Input } from "@chakra-ui/react";
-import { HiChevronDoubleRight } from "react-icons/hi2";
-import { LuPencilLine, LuX, LuTrash2, LuCheck } from "react-icons/lu";
+import { Flex, IconButton, Text, Input } from "@chakra-ui/react";
+import { LuPencilLine, LuX, LuTrash2, LuCheck, LuShare2 } from "react-icons/lu";
 import { useNavigate } from "react-router";
-import Link from "./link";
-import { deleteListFromState } from "./state";
 
 export const ListDetails = ({ docUrl, onDelete }) => {
   const [doc, changeDoc] = useDocument(docUrl);
   const [editing, setEditing] = useState(false);
   const [deleting, setDeleting] = useState(false);
+  const [copied, setCopied] = useState(false);
   const inputRef = useRef();
   const [name, setName] = useState("");
   const navigate = useNavigate();
@@ -37,8 +35,19 @@ export const ListDetails = ({ docUrl, onDelete }) => {
   }
 
   function deleteList() {
-    console.log("deleting list", docUrl);
     onDelete(docUrl);
+  }
+
+  function copyLink(e) {
+    e.stopPropagation();
+    const type = "text/plain";
+    const clipboardItemData = {
+      [type]: window.location.origin + "/list/" + docUrl,
+    };
+    const clipboardItem = new ClipboardItem(clipboardItemData);
+    navigator.clipboard.write([clipboardItem]);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 1500);
   }
 
   return (
@@ -98,7 +107,7 @@ export const ListDetails = ({ docUrl, onDelete }) => {
                   onClick={() => setDeleting(false)}
                 >
                   <LuX />
-                </IconButton>{" "}
+                </IconButton>
               </>
             ) : (
               <>
@@ -133,13 +142,24 @@ export const ListDetails = ({ docUrl, onDelete }) => {
             </IconButton>
           </Flex>
         ) : (
-          <IconButton
-            aria-label="Edit list name"
-            variant="ghost"
-            onClick={startEditing}
-          >
-            <LuPencilLine />
-          </IconButton>
+          <>
+            <IconButton
+              aria-label="Share list"
+              variant="ghost"
+              colorPalette="blue"
+              onClick={copyLink}
+            >
+              {copied ? <LuCheck /> : <LuShare2 />}
+            </IconButton>
+
+            <IconButton
+              aria-label="Edit list name"
+              variant="ghost"
+              onClick={startEditing}
+            >
+              <LuPencilLine />
+            </IconButton>
+          </>
         )}
       </Flex>
     </Flex>
