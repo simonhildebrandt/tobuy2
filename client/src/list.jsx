@@ -169,7 +169,7 @@ export const List = () => {
                   key={index}
                   size="xl"
                   colorPalette="gray"
-                  disabled="true"
+                  disabled={true}
                 >
                   {suggestion.name}
                 </Button>
