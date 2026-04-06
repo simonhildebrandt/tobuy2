@@ -43,13 +43,9 @@ export default function ListItem({
       _hover={{ bg: { base: "gray.200", _dark: "gray.800" } }}
       gap={4}
     >
-      <Checkbox.Root
-        onCheckedChange={handleChecked}
-        checked={checked}
-        variant="outline"
-      >
+      <Checkbox.Root checked={checked} variant="outline">
         <Checkbox.HiddenInput />
-        <Checkbox.Control>
+        <Checkbox.Control onClick={handleChecked}>
           <Checkbox.Indicator />
         </Checkbox.Control>
         <Checkbox.Label />

@@ -31,7 +31,7 @@ export const List = () => {
     if (!newItemName.trim()) return;
 
     changeDoc((d) => {
-      d.items.push({ name: newItemName, createdAt: Date.now() });
+      d.items.push({ name: newItemName, details: "", createdAt: Date.now() });
     });
 
     setNewItemName("");
@@ -42,7 +42,7 @@ export const List = () => {
       const [item] = d.items.splice(index, 1);
       d.inactiveItems.push({
         name: item.name,
-        details: item.details,
+        details: item.details || "",
         createdAt: item.createdAt,
         checkedAt: Date.now(),
       });
@@ -54,7 +54,7 @@ export const List = () => {
       const [item] = d.inactiveItems.splice(index, 1);
       d.items.push({
         name: item.name,
-        details: item.details,
+        details: item.details || "",
         createdAt: item.createdAt,
       });
     });
