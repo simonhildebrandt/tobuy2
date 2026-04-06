@@ -1,0 +1,13 @@
+{
+  "short_name": "StoreRun.au",
+  "name": "StoreRun.au",
+  "icons": [
+    {
+      "src": "/logo.svg",
+      "type": "image/svg+xml",
+      "sizes": "any"
+    }
+  ],
+  "start_url": "/last-list",
+  "display": "fullscreen"
+}
