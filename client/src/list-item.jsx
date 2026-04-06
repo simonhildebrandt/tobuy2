@@ -1,4 +1,4 @@
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { Flex, Text, IconButton, Checkbox, Input } from "@chakra-ui/react";
 import { LuTrash2, LuX } from "react-icons/lu";
 
@@ -14,6 +14,10 @@ export default function ListItem({
   const [editing, setEditing] = useState(false);
   const [newDetails, setNewDetails] = useState(item.details || "");
   const inputRef = useRef();
+
+  useEffect(() => {
+    setNewDetails(item.details || "");
+  }, [item.details]);
 
   const handleChecked = (e) => {
     onCheck(index);

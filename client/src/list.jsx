@@ -12,6 +12,7 @@ import {
 import { useParams } from "react-router";
 import { HiChevronDoubleRight } from "react-icons/hi2";
 import { LuX, LuEyeOff, LuEye, LuCheck } from "react-icons/lu";
+import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 
 import Page from "./page";
 import { useLists } from "./state";
@@ -94,6 +95,21 @@ export const List = () => {
       active: lowerCaseItems.includes(item),
       index: lowerCaseInactiveItems.indexOf(item),
     }));
+  }
+
+  function onReorder(result) {
+    console.log(result);
+    const { source, destination } = result;
+    if (!destination) return;
+
+    changeDoc((d) => {
+      const [moved] = d.items.splice(source.index, 1);
+      d.items.splice(destination.index, 0, {
+        name: moved.name,
+        details: moved.details || "",
+        createdAt: moved.createdAt,
+      });
+    });
   }
 
   return (
@@ -189,27 +205,50 @@ export const List = () => {
         <Flex direction="column" w="100%" overflowY="auto" flex="1 1 auto">
           <Flex
             direction="column"
-            gap={4}
             flexShrink={1}
             flexGrow={0}
             height="0"
             px={4}
           >
-            {items.map((item, index) => (
-              <Fragment key={index}>
-                <ListItem
-                  item={item}
-                  index={index}
-                  checked={false}
-                  onCheck={handleCheck}
-                  onDelete={handleDelete("items")}
-                  onUpdate={handleUpdate("items")}
-                />
-              </Fragment>
-            ))}
+            <DragDropContext onDragEnd={onReorder}>
+              <Droppable droppableId="shoppinglist">
+                {(droppable) => (
+                  <Flex direction="column" ref={droppable.innerRef}>
+                    {items.map((item, index) => (
+                      <Draggable
+                        key={index}
+                        draggableId={`item-${index}`}
+                        index={index}
+                      >
+                        {(provided) => (
+                          <Flex
+                            ref={provided.innerRef}
+                            {...provided.draggableProps}
+                            {...provided.dragHandleProps}
+                            w="100%"
+                            my={2}
+                            direction="column"
+                          >
+                            <ListItem
+                              item={item}
+                              index={index}
+                              checked={false}
+                              onCheck={handleCheck}
+                              onDelete={handleDelete("items")}
+                              onUpdate={handleUpdate("items")}
+                            />
+                          </Flex>
+                        )}
+                      </Draggable>
+                    ))}
+                    {droppable.placeholder}
+                  </Flex>
+                )}
+              </Droppable>
+            </DragDropContext>
             {showHidden &&
               inactiveItems.map((item, index) => (
-                <Fragment key={index}>
+                <Flex key={index} direction="column" my={2}>
                   <ListItem
                     item={item}
                     index={index}
@@ -218,7 +257,7 @@ export const List = () => {
                     onDelete={handleDelete("inactiveItems")}
                     onUpdate={handleUpdate("inactiveItems")}
                   />
-                </Fragment>
+                </Flex>
               ))}
           </Flex>
         </Flex>
