@@ -1,4 +1,4 @@
-import { Fragment, useState } from "react";
+import { Fragment, useEffect, useState } from "react";
 import { useDocument } from "@automerge/react";
 import {
   Flex,
@@ -15,7 +15,7 @@ import { LuX, LuEyeOff, LuEye, LuCheck } from "react-icons/lu";
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 
 import Page from "./page";
-import { useLists } from "./state";
+import { setLastList, useLists } from "./state";
 import ListItem from "./list-item";
 
 export const List = () => {
@@ -25,6 +25,10 @@ export const List = () => {
   const [doc, changeDoc] = useDocument(id);
   const [newItemName, setNewItemName] = useState("");
   const [showHidden, setShowHidden] = useState(false);
+
+  useEffect(() => {
+    setLastList(id);
+  }, []);
 
   if (!doc) return <div>Loading...</div>;
 

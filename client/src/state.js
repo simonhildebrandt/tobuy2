@@ -34,3 +34,11 @@ export const useLists = () => {
 
   return [lists, addList, deleteList];
 };
+
+export const getLastList = () => {
+  return localStorage.getItem("lastList");
+};
+
+export const setLastList = (listId) => {
+  localStorage.setItem("lastList", listId);
+};
