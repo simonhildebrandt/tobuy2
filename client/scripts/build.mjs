@@ -9,7 +9,7 @@ const settings = {
   format: "esm",
   jsx: "automatic",
   define: {
-    API_HOST: JSON.stringify(process.env.API_HOST || "ws://localhost:8080"),
+    API_HOST: JSON.stringify(process.env.API_HOST || "ws://localhost:8787"), // "wss://tobuy2-sync.simonhildebrandt.workers.dev" "wss://tobuy2.fly.dev/"
   },
 };
 

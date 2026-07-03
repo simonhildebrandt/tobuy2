@@ -1,0 +1,19 @@
+name = "tobuy2-sync"
+main = "src/worker.js"
+compatibility_date = "2026-07-01"
+
+[[durable_objects.bindings]]
+name = "REPO_DO"
+class_name = "RepoDurableObject"
+
+[[migrations]]
+tag = "v1"
+new_sqlite_classes = ["RepoDurableObject"]
+
+[observability.logs]
+enabled = true
+invocation_logs = true
+
+# Set with: wrangler secret put MIGRATION_SECRET
+# Only needed while running scripts/migrate-data.mjs; safe to leave configured
+# afterwards since the admin route always checks it.
